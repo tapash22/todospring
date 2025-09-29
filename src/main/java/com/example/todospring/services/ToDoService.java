@@ -25,7 +25,7 @@ public class ToDoService {
 
     public Todo createTodo(String title){
         Todo todo = new Todo();
-        todo.setTitle(title);
+        todo.setName(title);
         todo.setIsCompleted(false);
         toDoRepository.save(todo);
         return todo;
@@ -37,11 +37,11 @@ public class ToDoService {
             System.out.println("Todo Not Found");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            if (existingTodo.get().getTitle().equals(updatedTitle)) {
+            if (existingTodo.get().getName().equals(updatedTitle)) {
                 System.out.println("Existing Title is same as New Title");
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             } else {
-                existingTodo.get().setTitle(updatedTitle);
+                existingTodo.get().setName(updatedTitle);
                 toDoRepository.save(existingTodo.get());
                 return new ResponseEntity<>(HttpStatus.OK);
             }
@@ -57,18 +57,18 @@ public class ToDoService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public ResponseEntity updateTodoStatus(long id) {
+    public ResponseEntity<Object> updateTodoStatus(long id) {
         Optional<Todo> existingTodo = toDoRepository.findById(id);
         if (existingTodo.isEmpty()) {
             System.out.println("Todo Not Found");
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         if (existingTodo.get().getIsCompleted() == Boolean.TRUE) {
             System.out.println("Todo Already Completed");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         existingTodo.get().setIsCompleted(true);
         toDoRepository.save(existingTodo.get());
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
